@@ -1,24 +1,32 @@
 package org.semenov.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import javax.annotation.PostConstruct;
+
 @Component
+@RequiredArgsConstructor
 @Log4j
 public class TelegramBot extends TelegramLongPollingBot {
+
+    private final UpdateController updateController;
 
     @Value("${bot.name}")
     private String botName;
 
     @Value("${bot.token}")
     private String botToken;
+
 
     @Override
     public String getBotUsername() {
@@ -32,14 +40,8 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        var originalMessage = update.getMessage();
-        log.debug(originalMessage.getText());
-
-        var response = new SendMessage();
-        response.setChatId(originalMessage.getChatId().toString());
-        response.setText("You said: " + originalMessage.getText());
-
-        sendAnswerMessage(response);
+        log.info("On update received: " + update);
+        updateController.precessUpdate(update);
     }
 
     public void sendAnswerMessage(SendMessage message) {
@@ -50,6 +52,13 @@ public class TelegramBot extends TelegramLongPollingBot {
                 log.error(e);
             }
         }
+    }
 
+    /*
+     * Передача входящего сообщения в контроллер
+     */
+    @PostConstruct
+    public void init() {
+        updateController.registerBot(this);
     }
 }
