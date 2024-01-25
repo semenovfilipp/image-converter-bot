@@ -1,4 +1,4 @@
-package org.semenov.configuration;
+package org.semenov.config;
 
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -29,6 +29,6 @@ public class RabbitConfiguration {
     }
     @Bean
     public Queue answerMessageQueue(){
-        return new Queue(ANSWER_MESSAGE_UPDATE);
+        return new Queue(ANSWER_MESSAGE);
     }
 }

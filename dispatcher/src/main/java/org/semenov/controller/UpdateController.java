@@ -87,7 +87,7 @@ public class UpdateController {
      * Отправление сообщения пользователю
      * Отправление промежуточного сообщения пользователю
      */
-    private void setView(SendMessage sendMessage) {
+    public void setView(SendMessage sendMessage) {
         telegramBot.sendAnswerMessage(sendMessage);
     }
 
