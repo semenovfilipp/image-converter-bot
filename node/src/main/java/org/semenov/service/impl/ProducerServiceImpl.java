@@ -7,6 +7,9 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import static org.semenov.RabbitQueue.ANSWER_MESSAGE;
 
+/*
+ * Сервис для отправки ответов из node в RabbitMQ
+ */
 
 @Service
 public class ProducerServiceImpl implements ProducerService {

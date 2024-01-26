@@ -8,7 +8,10 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import static org.semenov.RabbitQueue.ANSWER_MESSAGE;
-
+/*
+ * Принимает сообщения в виде ответов из сервиса Node
+ * Далее передает их в UpdateController
+ */
 @Service
 @RequiredArgsConstructor
 public class AnswerConsumerImpl implements AnswerConsumer {
