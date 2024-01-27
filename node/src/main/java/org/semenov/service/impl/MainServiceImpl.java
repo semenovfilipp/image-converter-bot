@@ -14,6 +14,7 @@ import org.semenov.exception.UploadFileException;
 import org.semenov.service.FileService;
 import org.semenov.service.MainService;
 import org.semenov.service.ProducerService;
+import org.semenov.service.enums.LinkType;
 import org.semenov.service.enums.ServiceCommand;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -73,10 +74,11 @@ public class MainServiceImpl implements MainService {
 
         try {
             AppPhoto photo = fileService.processPhoto(update.getMessage());
-            // TODO добавить генерацию ссылки
+            String link = fileService.generateLink(photo.getId(), LinkType.GET_PHOTO);
+
             var answer = "Фотография загружена!" +
                     "Ссылка для скачивания: " +
-                    "https://drive.google.com/file/d/1-72l-456-789-0987";
+                    link;
 
             sendAnswer(answer, chatId);
         } catch (UploadFileException e) {
@@ -98,11 +100,11 @@ public class MainServiceImpl implements MainService {
 
         try {
             AppDocument document = fileService.processDoc(update.getMessage());
+            String link = fileService.generateLink(document.getId(), LinkType.GET_DOC);
 
-            // TODO формирование ссылки на скачивание
             var answer = "Документ загружен!" +
                     "Ссылка для скачивания: " +
-                    "https://drive.google.com/file/d/1-72l-456-789-09";
+                    link;
 
             sendAnswer(answer, chatId);
         } catch (UploadFileException e) {

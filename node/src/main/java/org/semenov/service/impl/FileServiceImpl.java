@@ -11,6 +11,8 @@ import org.semenov.entity.AppPhoto;
 import org.semenov.entity.BinaryContent;
 import org.semenov.exception.UploadFileException;
 import org.semenov.service.FileService;
+import org.semenov.service.enums.LinkType;
+import org.semenov.utils.CryptoTool;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -44,10 +46,14 @@ public class FileServiceImpl implements FileService {
     @Value("${telegram.bot.file_storage.uri}")
     private String fileStorageUri;
 
+    @Value("${link.address}")
+    private String linkAddress;
+
     private final AppPhotoDao appPhotoDao;
 
     private final AppDocumentDao appDocumentDao;
     private final BinaryContentDao binaryContentDao;
+    private final CryptoTool cryptoTool;
 
     @Override
     public AppDocument processDoc(Message telegramMessage) {
@@ -69,7 +75,10 @@ public class FileServiceImpl implements FileService {
     @Override
     public AppPhoto processPhoto(Message telegramMessage) {
         // TODO выбирает из фото какие нужны
-        PhotoSize telegramPhoto = telegramMessage.getPhoto().get(0);
+        var photoSizeCount = telegramMessage.getPhoto().size();
+        var photoIndex = photoSizeCount > 1 ? telegramMessage.getPhoto().size() -1 : 0;
+
+        PhotoSize telegramPhoto = telegramMessage.getPhoto().get(photoIndex);
         String fileId = telegramPhoto.getFileId();
         ResponseEntity<String> response = getFilePath(fileId);
 
@@ -83,6 +92,8 @@ public class FileServiceImpl implements FileService {
             throw new UploadFileException("Error downloading file" + response);
         }
     }
+
+
 
 
     private BinaryContent getPersistentBinaryContent(ResponseEntity<String> response) {
@@ -157,5 +168,9 @@ public class FileServiceImpl implements FileService {
         }
     }
 
-
+    @Override
+    public String generateLink(Long documentId, LinkType linkType) {
+        var hash = cryptoTool.hashOf(documentId);
+        return "http://"+linkAddress+"/"+linkType+"?id="+hash;
+    }
 }
