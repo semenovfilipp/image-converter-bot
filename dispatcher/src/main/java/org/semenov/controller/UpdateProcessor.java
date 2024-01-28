@@ -1,19 +1,12 @@
 package org.semenov.controller;
 
 
-import javassist.compiler.ast.Pair;
 import lombok.extern.log4j.Log4j;
-import org.apache.commons.lang3.tuple.MutablePair;
 import org.semenov.service.UpdateProducer;
 import org.semenov.utils.MessageUtils;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.function.BiPredicate;
 
 import static org.semenov.RabbitQueue.*;
 /*
@@ -24,12 +17,12 @@ import static org.semenov.RabbitQueue.*;
 
 @Component
 @Log4j
-public class UpdateController {
+public class UpdateProcessor {
     private TelegramBot telegramBot;
     private final MessageUtils messageUtils;
     private final UpdateProducer updateProducer;
 
-    public UpdateController(MessageUtils messageUtils, UpdateProducer updateProducer) {
+    public UpdateProcessor(MessageUtils messageUtils, UpdateProducer updateProducer) {
         this.messageUtils = messageUtils;
         this.updateProducer = updateProducer;
     }

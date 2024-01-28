@@ -1,7 +1,7 @@
 package org.semenov.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.semenov.controller.UpdateController;
+import org.semenov.controller.UpdateProcessor;
 import org.semenov.service.AnswerConsumer;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
@@ -15,11 +15,11 @@ import static org.semenov.RabbitQueue.ANSWER_MESSAGE;
 @Service
 @RequiredArgsConstructor
 public class AnswerConsumerImpl implements AnswerConsumer {
-    private final UpdateController updateController;
+    private final UpdateProcessor updateProcessor;
 
     @Override
     @RabbitListener(queues = ANSWER_MESSAGE)
     public void consume(SendMessage sendMessage) {
-        updateController.setView(sendMessage);
+        updateProcessor.setView(sendMessage);
     }
 }
