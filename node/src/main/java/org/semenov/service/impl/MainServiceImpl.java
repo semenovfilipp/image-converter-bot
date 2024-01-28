@@ -26,7 +26,7 @@ import static org.semenov.entity.enums.UserState.BASIC_STATE;
 import static org.semenov.service.enums.ServiceCommand.*;
 
 /*
- * Отвечает за обработку всех входящих сообщений
+ * Сервис отвечает за обработку всех входящих сообщений
  */
 @Service
 @RequiredArgsConstructor

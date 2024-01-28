@@ -53,6 +53,7 @@ public class UpdateProcessor {
         }
     }
 
+
     private void distributeMessagesByType(Update update) {
         var message = update.getMessage();
         if (message.hasText()) {
@@ -67,17 +68,10 @@ public class UpdateProcessor {
 
     }
 
-    private void setUnsupportedMessageTypeView(Update update) {
-        log.error("Received unsupported message type: " + update);
-        var sendMessage = messageUtils.generateSendMessageWithText(update,
-                "Unsupported message type");
 
-        setView(sendMessage);
-    }
 
 
     /*
-     * Отправление сообщения пользователю
      * Отправление промежуточного сообщения пользователю
      */
     public void setView(SendMessage sendMessage) {
@@ -92,9 +86,16 @@ public class UpdateProcessor {
         setView(sendMessage);
 
     }
+    private void setUnsupportedMessageTypeView(Update update) {
+        log.error("Received unsupported message type: " + update);
+        var sendMessage = messageUtils.generateSendMessageWithText(update,
+                "Unsupported message type");
+
+        setView(sendMessage);
+    }
 
     /*
-     * Передача сообщений в очередь
+     * Отправление сообщений в очередь RabbitMQ
      */
 
     private void processTextMessage(Update update) {

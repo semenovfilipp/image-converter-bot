@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 /*
- * Получает сообщение в виде объекта Update
- * Передает сообщение в RabbitMQ
+ * Сервис получает сообщение в виде объекта Update
+ * Далее передает сообщение в RabbitMQ
  */
 @Service
 @Log4j

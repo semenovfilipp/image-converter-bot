@@ -16,6 +16,10 @@ import org.springframework.web.client.RestTemplate;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+/*
+ *  Сервис для регистрации пользователей и установки их электронной почты
+ */
+
 @Service
 @RequiredArgsConstructor
 @Log4j
@@ -69,8 +73,12 @@ public class AppUserServiceImpl implements AppUserService {
             return "Пользователь с таким email уже существует. Для отмены введите /cancel";
         }
     }
+    /*
+     * Данный метод отправляет запрос на сервис
+     * отправки электронной почты (mail-service), используя RestTemplate
+     * @param cryptoUserId - хеш id пользователя
+     */
 
-    // Код готовит запрос на отправку почтового сообщения
     private ResponseEntity<String> sendRequestToEmailService(String cryptoUserId, String email) {
         var restTemplate = new RestTemplate();
         var headers = new HttpHeaders();
@@ -86,6 +94,6 @@ public class AppUserServiceImpl implements AppUserService {
                 HttpMethod.POST,
                 request,
                 String.class
-                );
+        );
     }
 }

@@ -1,7 +1,7 @@
 package org.semenov.service.enums;
 
 /*
- * Идентификторы ресурсов при генерации ссылки
+ * Идентификторы ресурсов при генерации ссылки для скачивания файлов
  */
 public enum LinkType {
     GET_DOC("file/get-doc"),

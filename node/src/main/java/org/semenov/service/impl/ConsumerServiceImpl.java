@@ -9,7 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import static org.semenov.RabbitQueue.*;
 /*
- * Сервис для считывания сообщений из брокера
+ * Сервис для считывания сообщений из брокера RabbitMQ
  */
 @Service
 @Log4j

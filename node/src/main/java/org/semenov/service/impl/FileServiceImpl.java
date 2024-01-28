@@ -28,9 +28,8 @@ import java.net.URL;
 
 
 /*
- * Сервис получает message из Telegram
- * Выполняет действия для скачивания файла
- * Сохраняет файл в БД
+ * Сервис предоставляет функциональность для загрузки файлов из сообщений Telegram,
+ * сохранения их в базе данных и генерации ссылок для доступа к ним.
  */
 
 @Service
@@ -55,6 +54,10 @@ public class FileServiceImpl implements FileService {
     private final BinaryContentDao binaryContentDao;
     private final CryptoTool cryptoTool;
 
+    /*
+     * Эти методы предназначены для обработки документов и фотографий,
+     *  полученных из сообщений в Telegram соответственно
+     */
     @Override
     public AppDocument processDoc(Message telegramMessage) {
         Document telegramDocument = telegramMessage.getDocument();
@@ -74,9 +77,8 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public AppPhoto processPhoto(Message telegramMessage) {
-        // TODO выбирает из фото какие нужны
         var photoSizeCount = telegramMessage.getPhoto().size();
-        var photoIndex = photoSizeCount > 1 ? telegramMessage.getPhoto().size() -1 : 0;
+        var photoIndex = photoSizeCount > 1 ? telegramMessage.getPhoto().size() - 1 : 0;
 
         PhotoSize telegramPhoto = telegramMessage.getPhoto().get(photoIndex);
         String fileId = telegramPhoto.getFileId();
@@ -92,8 +94,6 @@ public class FileServiceImpl implements FileService {
             throw new UploadFileException("Error downloading file" + response);
         }
     }
-
-
 
 
     private BinaryContent getPersistentBinaryContent(ResponseEntity<String> response) {
@@ -115,6 +115,10 @@ public class FileServiceImpl implements FileService {
     }
 
 
+    /*
+     * Методы создают объекты для временного хранения данных о документе и фотографии соответственно.
+     * Объекты будут переданы для дальнейшей обработки или сохранения в базе данных.
+     */
 
     private AppDocument buildTransientAppDocument(Document telegramDoc, BinaryContent persistentBinaryContent) {
         return AppDocument.builder()
@@ -125,6 +129,7 @@ public class FileServiceImpl implements FileService {
                 .fileSize(telegramDoc.getFileSize())
                 .build();
     }
+
     private AppPhoto buildTransientAppPhoto(PhotoSize telegramPhoto, BinaryContent persistentBinaryContent) {
         return AppPhoto.builder()
                 .telegramFileId(telegramPhoto.getFileId())
@@ -139,7 +144,7 @@ public class FileServiceImpl implements FileService {
         HttpHeaders httpHeaders = new HttpHeaders();
         HttpEntity<String> request = new HttpEntity<>(httpHeaders);
 
-        return  restTemplate.exchange(
+        return restTemplate.exchange(
                 fileInfoUri,
                 HttpMethod.GET,
                 request,
@@ -150,27 +155,26 @@ public class FileServiceImpl implements FileService {
     }
 
     private byte[] downloadFile(String filePath) {
-        String fullUri = fileStorageUri.replace("{token}",token)
-                .replace("{filePath}",filePath);
+        String fullUri = fileStorageUri.replace("{token}", token)
+                .replace("{filePath}", filePath);
 
         URL urlObject = null;
-        try{
+        try {
             urlObject = new URL(fullUri);
-        }catch (MalformedURLException e){
+        } catch (MalformedURLException e) {
             throw new UploadFileException(e);
         }
 
-        // TODO исравить
-        try(InputStream is = urlObject.openStream()){
+        try (InputStream is = urlObject.openStream()) {
             return is.readAllBytes();
         } catch (IOException e) {
-            throw new UploadFileException(urlObject.toExternalForm(),e);
+            throw new UploadFileException(urlObject.toExternalForm(), e);
         }
     }
 
     @Override
     public String generateLink(Long documentId, LinkType linkType) {
         var hash = cryptoTool.hashOf(documentId);
-        return "http://"+linkAddress+"/"+linkType+"?id="+hash;
+        return "http://" + linkAddress + "/" + linkType + "?id=" + hash;
     }
 }

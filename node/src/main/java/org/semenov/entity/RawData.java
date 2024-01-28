@@ -8,6 +8,10 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import javax.persistence.*;
 
+/*
+ * Сущность представляет собой данные, полученные из Телеграм в виде объекта Update
+ */
+
 @Getter
 @Setter
 @EqualsAndHashCode(exclude = "id")
@@ -25,9 +29,4 @@ public class RawData {
     @Type(type = "jsonb")
     @Column(columnDefinition = "jsonb")
     private Update event;
-
-
-
-
-
 }

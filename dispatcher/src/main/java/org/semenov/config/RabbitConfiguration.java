@@ -8,27 +8,34 @@ import org.springframework.context.annotation.Configuration;
 
 import static org.semenov.RabbitQueue.*;
 
+/*
+ * Конфигурация RabbitMQ
+ * Описывает очереди
+ */
 @Configuration
 public class RabbitConfiguration {
     @Bean
-    public MessageConverter jsonMessageConverter(){
+    public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
     }
 
     @Bean
-    public Queue textMessageQueue(){
+    public Queue textMessageQueue() {
         return new Queue(TEXT_MESSAGE_UPDATE);
     }
+
     @Bean
-    public Queue docMessageQueue(){
+    public Queue docMessageQueue() {
         return new Queue(DOC_MESSAGE_UPDATE);
     }
+
     @Bean
-    public Queue photoMessageQueue(){
+    public Queue photoMessageQueue() {
         return new Queue(PHOTO_MESSAGE_UPDATE);
     }
+
     @Bean
-    public Queue answerMessageQueue(){
+    public Queue answerMessageQueue() {
         return new Queue(ANSWER_MESSAGE);
     }
 }

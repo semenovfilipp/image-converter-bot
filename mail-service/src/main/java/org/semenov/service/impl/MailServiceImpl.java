@@ -8,6 +8,9 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+/*
+ * Сервис отвечает за отправку электронных писем
+ */
 @Service
 @RequiredArgsConstructor
 public class MailServiceImpl implements MailSenderService {
