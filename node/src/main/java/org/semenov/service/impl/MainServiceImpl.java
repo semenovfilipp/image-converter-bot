@@ -11,6 +11,7 @@ import org.semenov.entity.AppUser;
 import org.semenov.entity.RawData;
 import org.semenov.entity.enums.UserState;
 import org.semenov.exception.UploadFileException;
+import org.semenov.service.AppUserService;
 import org.semenov.service.FileService;
 import org.semenov.service.MainService;
 import org.semenov.service.ProducerService;
@@ -35,6 +36,7 @@ public class MainServiceImpl implements MainService {
     private final ProducerService producerService;
     private final AppUserDao appUserDao;
     private final FileService fileService;
+    private final AppUserService appUserService;
 
     @Override
     public void processTextMessage(Update update) {
@@ -46,13 +48,13 @@ public class MainServiceImpl implements MainService {
         var output = "";
 
 
-        var serviceCommand = ServiceCommand.valueOf(text);
+        var serviceCommand = ServiceCommand.fromValue(text);
         if (CANCEL.equals(serviceCommand)) {
             output = cancelProcess(appUser);
         } else if (userState.equals(BASIC_STATE)) {
-            output = serviceCommandProcess(appUser, text);
+            output = processServiceCommands(appUser, text);
         } else if (UserState.WAIT_FOR_EMAIL_STATE.equals(userState)) {
-            // TODO добавить обработку email
+            output = appUserService.setEmail(appUser, text);
         } else {
             log.error("Unknown state: " + userState);
             output = "Неизвестная ошибка! Введите /cancel для отмены операции";
@@ -114,7 +116,7 @@ public class MainServiceImpl implements MainService {
         }
     }
 
-    private boolean isNotAllowToSendContent(Long chatId, AppUser appUser) {
+    public boolean isNotAllowToSendContent(Long chatId, AppUser appUser) {
         var userState = appUser.getUserState();
 
         if (!appUser.getIsActive()) {
@@ -130,7 +132,7 @@ public class MainServiceImpl implements MainService {
         return false;
     }
 
-    private void sendAnswer(String output, Long chatId) {
+    public void sendAnswer(String output, Long chatId) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
         sendMessage.setText(output);
@@ -138,13 +140,13 @@ public class MainServiceImpl implements MainService {
         producerService.produceAnswer(sendMessage);
     }
 
-    private String serviceCommandProcess(AppUser appUser, String command) {
-        if (REGISTRATION.equals(command)) {
-            // TODO добавить регистрацию
-            return "Временно недоступно";
-        } else if (HELP.equals(command)) {
+    public String processServiceCommands(AppUser appUser, String command) {
+        var serviceCommand = ServiceCommand.fromValue(command);
+        if (REGISTRATION.equals(serviceCommand)) {
+            return appUserService.registerUser(appUser);
+        } else if (HELP.equals(serviceCommand)) {
             return help();
-        } else if (START.equals(command)) {
+        } else if (START.equals(serviceCommand)) {
             return "Приветствую!Чтобы посмотреть список доступных комманд, введите /help";
         } else {
             return "Неизвестная комманда!Чтобы посмотреть список доступных комманд, введите /help";
@@ -159,31 +161,30 @@ public class MainServiceImpl implements MainService {
                 "/cancel - отмена операции";
     }
 
-    private String cancelProcess(AppUser appUser) {
+    public String cancelProcess(AppUser appUser) {
         appUser.setUserState(BASIC_STATE);
         appUserDao.save(appUser);
         return "Комманда отменена!";
     }
 
 
-    private AppUser findOrSaveAppUser(Update update) {
+    public AppUser findOrSaveAppUser(Update update) {
         User telegramUser = update.getMessage().getFrom();
-        AppUser persistentAppUser = appUserDao.findAppUserByTelegramUserId(telegramUser.getId());
+        var optionalAppUser = appUserDao.findUserByTelegramUserId(telegramUser.getId());
 
-        if (persistentAppUser == null) {
+        if (optionalAppUser.isEmpty()) {
             AppUser transientAppUser = AppUser.builder()
                     .telegramUserId(telegramUser.getId())
                     .username(telegramUser.getUserName())
                     .firstname(telegramUser.getFirstName())
                     .lastname(telegramUser.getLastName())
-                    // TODO изменить значение
-                    .isActive(true)
+                    .isActive(false)
                     .userState(BASIC_STATE)
                     .build();
 
             return appUserDao.save(transientAppUser);
         }
-        return persistentAppUser;
+        return optionalAppUser.get();
     }
 
     public void saveRawData(Update update) {

@@ -1,8 +1,8 @@
 package org.semenov.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.semenov.dto.MailParams;
 import org.semenov.service.MailSenderService;
+import org.semenov.utils.dto.MailParams;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;

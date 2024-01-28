@@ -1,8 +1,8 @@
 package org.semenov.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.semenov.dto.MailParams;
 import org.semenov.service.MailSenderService;
+import org.semenov.utils.dto.MailParams;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
