@@ -17,24 +17,19 @@
     </properties>
 
     <dependencies>
+        <!-- Spring Boot Starter for Web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.telegram</groupId>
-            <artifactId>telegrambots-spring-boot-starter</artifactId>
-            <version>${telegrambot.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.semenov</groupId>
-            <artifactId>common-rabbitmq</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
+
+        <!-- Spring Boot Starter for AMQP (Advanced Message Queuing Protocol) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
+
+        <!-- Database -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -49,6 +44,20 @@
             <artifactId>hibernate-types-52</artifactId>
             <version>2.2.2</version>
         </dependency>
+
+        <!-- Telegram Bots Spring Boot Starter -->
+        <dependency>
+            <groupId>org.telegram</groupId>
+            <artifactId>telegrambots-spring-boot-starter</artifactId>
+            <version>${telegrambot.version}</version>
+        </dependency>
+
+        <!-- Common dependency-->
+        <dependency>
+            <groupId>com.semenov</groupId>
+            <artifactId>common-rabbitmq</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>com.semenov</groupId>
             <artifactId>common-jpa</artifactId>
@@ -59,17 +68,21 @@
             <artifactId>common-utils</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+
+        <!-- JSON library -->
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20230618</version>
         </dependency>
+
+        <!-- JavaMail API -->
         <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
             <version>1.4</version>
         </dependency>
-
     </dependencies>
+
 
 </project>

@@ -17,6 +17,7 @@
     </properties>
 
     <dependencies>
+        <!--Generating and decoding unique hashes (hashids) in Java applications. -->
         <dependency>
             <groupId>org.hashids</groupId>
             <artifactId>hashids</artifactId>
