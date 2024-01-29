@@ -24,8 +24,6 @@ public class TelegramBot extends TelegramLongPollingBot {
     @Value("${bot.token}")
     private String botToken;
 
-//    @Value("${bot.uri}")
-//    private String botUri;
 
 
     @Override
@@ -56,14 +54,6 @@ public class TelegramBot extends TelegramLongPollingBot {
     @PostConstruct
     public void init() {
         updateProcessor.registerBot(this);
-//        try{
-//            var setWebhook = SetWebhook.builder()
-//                    .url(botUri)
-//                    .build();
-//            this.setWebhook(setWebhook);
-//        } catch (TelegramApiException e) {
-//            log.error(e);
-//        }
     }
 
     @Override
@@ -71,11 +61,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         updateProcessor.precessUpdate(update);
     }
 
-
-//    @Override
-//    public String getBotPath() {
-//        return "/update";
-//    }
 
 
 }
